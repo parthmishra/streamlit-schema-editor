@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=77.0.3", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "streamlit-schema-editor"
+version = "0.0.1"
+description = "Streamlit custom component for rendering and editing schema graphs"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [{ name = "Parth Mishra", email = "pmishraworld@mac.com" }]
+dependencies = ["streamlit >= 1.51"]
+keywords = ["streamlit", "schema", "er-diagram", "lineage", "metadata"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Framework :: Streamlit",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: User Interfaces",
+]
+
+[project.urls]
+Homepage = "https://github.com/parthmishra/streamlit-schema-editor"
+Repository = "https://github.com/parthmishra/streamlit-schema-editor"
+Issues = "https://github.com/parthmishra/streamlit-schema-editor/issues"
+
+[project.optional-dependencies]
+devel = [
+  "wheel",
+  "pytest==7.4.0",
+  "playwright==1.48.0",
+  "requests==2.31.0",
+  "pytest-playwright-snapshot==1.0",
+  "pytest-rerunfailures==12.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["streamlit_schema_editor*"]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+streamlit_schema_editor = ["frontend/build/**/*", "pyproject.toml", "py.typed"]
+
+[tool.streamlit.component]
+v2 = true
+
+[[tool.streamlit.component.components]]
+name = "streamlit_schema_editor"
+asset_dir = "frontend/build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
