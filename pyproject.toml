@@ -27,7 +27,6 @@ Issues = "https://github.com/parthmishra/streamlit-schema-editor/issues"
 [dependency-groups]
 dev = [
   "pytest>=7.4.0",
-  "wheel",
   "playwright==1.48.0",
   "requests==2.31.0",
   "pytest-playwright-snapshot==1.0",
@@ -35,18 +34,27 @@ dev = [
 ]
 
 [build-system]
-requires = ["setuptools>=77.0.3", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["uv_build>=0.11.14,<0.12"]
+build-backend = "uv_build"
 
-
-[tool.setuptools.packages.find]
-include = ["streamlit_schema_editor*"]
-
-[tool.setuptools]
-include-package-data = true
-
-[tool.setuptools.package-data]
-streamlit_schema_editor = ["frontend/build/**/*", "pyproject.toml", "py.typed"]
+[tool.uv.build-backend]
+module-name = "streamlit_schema_editor"
+module-root = ""
+source-include = ["examples/**", "tests/**"]
+source-exclude = [
+  "streamlit_schema_editor/frontend/node_modules",
+  "streamlit_schema_editor/frontend/node_modules/**",
+]
+wheel-exclude = [
+  "streamlit_schema_editor/frontend/node_modules",
+  "streamlit_schema_editor/frontend/node_modules/**",
+  "streamlit_schema_editor/frontend/src",
+  "streamlit_schema_editor/frontend/src/**",
+  "streamlit_schema_editor/frontend/package*.json",
+  "streamlit_schema_editor/frontend/preview.html",
+  "streamlit_schema_editor/frontend/tsconfig.json",
+  "streamlit_schema_editor/frontend/vite.config.ts",
+]
 
 [tool.streamlit.component]
 v2 = true

@@ -1,4 +1,0 @@
-recursive-include streamlit_schema_editor/frontend/build *
-recursive-include examples *.py
-recursive-include tests *.py
-include pyproject.toml
