@@ -16,7 +16,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version-file: pyproject.toml
+          python-version-file: .python-version
 
       - name: Set up Node.js
         uses: actions/setup-node@v6
@@ -57,7 +57,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version-file: pyproject.toml
+          python-version-file: .python-version
 
       - name: Set up Node.js
         uses: actions/setup-node@v6
@@ -74,7 +74,7 @@ jobs:
           npm run build
 
       - name: Run Tests
-        run: uv run pytest tests/test_api.py
+        run: uv run --no-dev --with pytest pytest tests/test_api.py
 
       - name: Validate example modules
-        run: uv run python -m py_compile examples/playground.py examples/databricks_mapping.py streamlit_schema_editor/__init__.py
+        run: uv run --no-dev python -m py_compile examples/playground.py examples/databricks_mapping.py streamlit_schema_editor/__init__.py
