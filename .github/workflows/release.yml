@@ -40,5 +40,12 @@ jobs:
       - name: Build Python package
         run: uv build
 
+      # Check that the built artifacts install cleanly and include frontend assets.
+      - name: Smoke test wheel
+        run: uv run --isolated --no-project --with dist/*.whl tests/smoke_test.py
+
+      - name: Smoke test source distribution
+        run: uv run --isolated --no-project --with dist/*.tar.gz tests/smoke_test.py
+
       - name: Publish
         run: uv publish
