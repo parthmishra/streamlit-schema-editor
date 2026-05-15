@@ -21,13 +21,17 @@ def _find_open_port() -> int:
         return sock.getsockname()[1]
 
 
-def _wait_for_app(url: str, process: subprocess.Popen[str], timeout: float = 30.0) -> None:
+def _wait_for_app(
+    url: str, process: subprocess.Popen[str], timeout: float = 30.0
+) -> None:
     deadline = time.time() + timeout
     while time.time() < deadline:
         if process.poll() is not None:
             stdout = process.stdout.read() if process.stdout else ""
             stderr = process.stderr.read() if process.stderr else ""
-            raise RuntimeError(f"Streamlit exited early.\nSTDOUT:\n{stdout}\nSTDERR:\n{stderr}")
+            raise RuntimeError(
+                f"Streamlit exited early.\nSTDOUT:\n{stdout}\nSTDERR:\n{stderr}"
+            )
         try:
             response = requests.get(url, timeout=1)
             if response.status_code == 200:
@@ -132,9 +136,9 @@ def test_inline_column_editing_round_trip(streamlit_app: str) -> None:
             ).click()
             page.get_by_role("listbox", name="Suggested data types").wait_for()
             page.mouse.click(24, 24)
-            page.get_by_role(
-                "listbox", name="Suggested data types"
-            ).wait_for(state="detached")
+            page.get_by_role("listbox", name="Suggested data types").wait_for(
+                state="detached"
+            )
 
             page.get_by_label(
                 "Edit column data type for customer_alias in table crm_customer"

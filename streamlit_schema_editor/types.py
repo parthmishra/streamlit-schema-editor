@@ -64,18 +64,21 @@ class SelectionState(TypedDict):
     selected_relationship_id: str | None
 
 
-SchemaEditorEvent = Literal[
-    "selection_changed",
-    "node_moved",
-    "table_deleted",
-    "column_created",
-    "column_updated",
-    "column_deleted",
-    "relationship_created",
-    "relationship_deleted",
-    "relationship_rejected",
-    "edge_details_requested",
-] | None
+SchemaEditorEvent = (
+    Literal[
+        "selection_changed",
+        "node_moved",
+        "table_deleted",
+        "column_created",
+        "column_updated",
+        "column_deleted",
+        "relationship_created",
+        "relationship_deleted",
+        "relationship_rejected",
+        "edge_details_requested",
+    ]
+    | None
+)
 
 EventContext = dict[str, Any] | None
 

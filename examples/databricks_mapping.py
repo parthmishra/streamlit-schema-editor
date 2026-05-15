@@ -4,7 +4,6 @@ import streamlit as st
 
 from streamlit_schema_editor import (
     GroupSpec,
-    RelationshipSpec,
     TableSpec,
     streamlit_schema_editor,
 )
@@ -136,10 +135,12 @@ target_rows = [
 ]
 
 source_tables = [
-    {**table, "group_id": "source"} for table in build_tables_from_databricks_columns(source_rows)
+    {**table, "group_id": "source"}
+    for table in build_tables_from_databricks_columns(source_rows)
 ]
 target_tables = [
-    {**table, "group_id": "target"} for table in build_tables_from_databricks_columns(target_rows)
+    {**table, "group_id": "target"}
+    for table in build_tables_from_databricks_columns(target_rows)
 ]
 
 if "mapping_tables" not in st.session_state:

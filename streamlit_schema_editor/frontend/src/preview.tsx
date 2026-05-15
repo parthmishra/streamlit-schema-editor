@@ -100,7 +100,10 @@ document.documentElement.style.setProperty(
 );
 document.documentElement.style.setProperty("--st-text-color", "#111827");
 document.documentElement.style.setProperty("--st-border-color", "#d4d4d8");
-document.documentElement.style.setProperty("--st-widget-border-color", "#d4d4d8");
+document.documentElement.style.setProperty(
+  "--st-widget-border-color",
+  "#d4d4d8",
+);
 document.documentElement.style.setProperty("--st-primary-color", "#2563eb");
 document.documentElement.style.setProperty("--st-base-radius", "0.75rem");
 

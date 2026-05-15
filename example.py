@@ -264,9 +264,7 @@ def build_default_relationships() -> list[RelationshipSpec]:
 
 st.set_page_config(page_title="streamlit-schema-editor", layout="wide")
 st.title("streamlit-schema-editor")
-st.caption(
-    "Generic schema and mapping canvas built with Streamlit CCv2 + React Flow."
-)
+st.caption("Generic schema and mapping canvas built with Streamlit CCv2 + React Flow.")
 
 if "demo_tables" not in st.session_state:
     st.session_state.demo_tables = build_default_tables()
@@ -355,8 +353,8 @@ if inspected_relationship is None:
 elif st.session_state.editor_loaded_relationship_id != inspected_relationship["id"]:
     st.session_state.editor_label_input = inspected_relationship.get("label", "")
     st.session_state.editor_sql_expression_input = (
-        (inspected_relationship.get("metadata") or {}).get("sql_expression", "")
-    )
+        inspected_relationship.get("metadata") or {}
+    ).get("sql_expression", "")
     st.session_state.editor_loaded_relationship_id = inspected_relationship["id"]
 
 with detail_slot.container(border=True):
@@ -368,20 +366,18 @@ with detail_slot.container(border=True):
         status_cols = st.columns(3)
         status_cols[0].metric(
             "Column",
-            f'{selected_table["label"]}.{selected_column["name"]}',
+            f"{selected_table['label']}.{selected_column['name']}",
         )
         status_cols[1].metric("Type", selected_column["data_type"])
         status_cols[2].metric("Validation", status.title())
 
         if status == "error":
             st.error(
-                validation.get("summary")
-                or "This column failed schema validation."
+                validation.get("summary") or "This column failed schema validation."
             )
         elif status == "loading":
             st.warning(
-                validation.get("summary")
-                or "This column is still being validated."
+                validation.get("summary") or "This column is still being validated."
             )
         elif status == "success":
             st.success("This column passed the latest schema validation check.")
@@ -410,12 +406,12 @@ with detail_slot.container(border=True):
         )
     else:
         source = (
-            f'{inspected_relationship["source_table"]}.'
-            f'{inspected_relationship["source_column"]}'
+            f"{inspected_relationship['source_table']}."
+            f"{inspected_relationship['source_column']}"
         )
         target = (
-            f'{inspected_relationship["target_table"]}.'
-            f'{inspected_relationship["target_column"]}'
+            f"{inspected_relationship['target_table']}."
+            f"{inspected_relationship['target_column']}"
         )
         top_cols = st.columns(3)
         top_cols[0].metric("Source", source)
@@ -457,7 +453,9 @@ with detail_slot.container(border=True):
                 height=160,
                 help="Example of domain-specific metadata that round-trips through the component without being a first-class schema field.",
             )
-            st.form_submit_button("Save relationship metadata", on_click=save_relationship_edits)
+            st.form_submit_button(
+                "Save relationship metadata", on_click=save_relationship_edits
+            )
 
         st.caption("Current saved SQL expression")
         st.code(
@@ -485,8 +483,8 @@ with st.expander("Selected relationship", expanded=True):
     else:
         st.write(
             {
-                "source": f'{selected_relationship["source_table"]}.{selected_relationship["source_column"]}',
-                "target": f'{selected_relationship["target_table"]}.{selected_relationship["target_column"]}',
+                "source": f"{selected_relationship['source_table']}.{selected_relationship['source_column']}",
+                "target": f"{selected_relationship['target_table']}.{selected_relationship['target_column']}",
                 "label": selected_relationship.get("label"),
                 "validation": selected_relationship.get("validation"),
                 "metadata": selected_relationship.get("metadata"),

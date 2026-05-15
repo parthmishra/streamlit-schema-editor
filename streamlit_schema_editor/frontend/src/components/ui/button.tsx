@@ -9,8 +9,7 @@ const variantClasses: Record<ButtonVariant, string> = {
   default: "bg-primary text-primary-foreground hover:opacity-90",
   outline:
     "border border-border bg-background text-foreground hover:bg-muted hover:text-foreground",
-  secondary:
-    "bg-secondary text-secondary-foreground hover:opacity-90",
+  secondary: "bg-secondary text-secondary-foreground hover:opacity-90",
   ghost: "text-foreground hover:bg-muted hover:text-foreground",
 };
 
@@ -27,7 +26,13 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { className, type = "button", variant = "default", size = "default", ...props },
+    {
+      className,
+      type = "button",
+      variant = "default",
+      size = "default",
+      ...props
+    },
     ref,
   ) => (
     <button

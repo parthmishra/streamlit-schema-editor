@@ -326,9 +326,7 @@ st.session_state.playground_relationships = component_value["relationships"]
 
 summary_columns = st.columns(4)
 summary_columns[0].metric("Groups", len(st.session_state.playground_groups))
-summary_columns[1].metric(
-    "Tables", len(st.session_state.playground_tables)
-)
+summary_columns[1].metric("Tables", len(st.session_state.playground_tables))
 summary_columns[2].metric(
     "Relationships", len(st.session_state.playground_relationships)
 )

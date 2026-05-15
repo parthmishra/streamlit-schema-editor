@@ -1,4 +1,3 @@
-import streamlit_schema_editor as sse
 from streamlit.errors import StreamlitAPIException
 from streamlit_schema_editor import EventContext, Metadata, streamlit_schema_editor
 from streamlit_schema_editor import _component as component_registry
@@ -38,12 +37,16 @@ def test_component_falls_back_to_inline_assets_when_manifest_is_missing(
         "_load_built_asset",
         lambda pattern: f"inline::{pattern}\n",
     )
-    monkeypatch.setattr(component_registry.st.components.v2, "component", fake_component)
+    monkeypatch.setattr(
+        component_registry.st.components.v2, "component", fake_component
+    )
 
     try:
         resolved = component_registry.get_component()
     finally:
-        monkeypatch.setattr(component_registry.st.components.v2, "component", original_component)
+        monkeypatch.setattr(
+            component_registry.st.components.v2, "component", original_component
+        )
         monkeypatch.setattr(component_registry, "_COMPONENT", original_cached_component)
 
     assert callable(resolved)

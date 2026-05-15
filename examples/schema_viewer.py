@@ -75,7 +75,11 @@ value = streamlit_schema_editor(
 )
 
 selected_table = next(
-    (table for table in value["tables"] if table["id"] == value["selection"]["selected_table_id"]),
+    (
+        table
+        for table in value["tables"]
+        if table["id"] == value["selection"]["selected_table_id"]
+    ),
     None,
 )
 

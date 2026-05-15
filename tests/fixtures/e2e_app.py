@@ -51,14 +51,15 @@ event_context = value["event_context"] or {}
 crm_customer = next(table for table in value["tables"] if table["id"] == "crm_customer")
 st.write(f"event::{value['event'] or 'none'}")
 st.write(
-    "selected_relationship::"
-    f"{value['selection']['selected_relationship_id'] or 'none'}"
+    f"selected_relationship::{value['selection']['selected_relationship_id'] or 'none'}"
 )
 st.write(f"selected_column::{value['selection']['selected_column_id'] or 'none'}")
 st.write(f"context_relationship::{event_context.get('relationship_id') or 'none'}")
 st.write(f"context_table::{event_context.get('table_id') or 'none'}")
 st.write(f"context_column::{event_context.get('column_id') or 'none'}")
-st.write(f"crm_customer_columns::{','.join(column['name'] for column in crm_customer['columns'])}")
+st.write(
+    f"crm_customer_columns::{','.join(column['name'] for column in crm_customer['columns'])}"
+)
 st.write(
     "crm_customer_types::"
     f"{','.join(column['data_type'] for column in crm_customer['columns'])}"

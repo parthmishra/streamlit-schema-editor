@@ -307,8 +307,9 @@ const fallbackPosition = (index: number): SchemaEditorPosition => ({
   y: 48 + Math.floor(index / GRID_COLUMNS) * GRID_Y_GAP,
 });
 
-const isDatabaseTableNode = (node: SchemaNode | Node): node is DatabaseTableNode =>
-  node.type === "databaseSchema";
+const isDatabaseTableNode = (
+  node: SchemaNode | Node,
+): node is DatabaseTableNode => node.type === "databaseSchema";
 
 const isSchemaGroupNode = (node: SchemaNode | Node): node is SchemaGroupNode =>
   node.type === "labeledGroup";
@@ -345,7 +346,9 @@ const orderGroups = (
     return groups;
   }
 
-  const rankById = new Map(groupOrder.map((groupId, index) => [groupId, index]));
+  const rankById = new Map(
+    groupOrder.map((groupId, index) => [groupId, index]),
+  );
   return [...groups].sort((left, right) => {
     const leftRank = rankById.get(left.id);
     const rightRank = rankById.get(right.id);
@@ -397,7 +400,10 @@ const resolveGroupLayouts = (
       };
     });
     const stackedContentHeight =
-      memberDimensions.reduce((total, dimensions) => total + dimensions.height, 0) +
+      memberDimensions.reduce(
+        (total, dimensions) => total + dimensions.height,
+        0,
+      ) +
       Math.max(0, memberDimensions.length - 1) * TABLE_STACK_GAP_Y;
     const stackedContentWidth = Math.max(
       ESTIMATED_TABLE_WIDTH,
@@ -411,11 +417,13 @@ const resolveGroupLayouts = (
           : {
               x:
                 memberBounds.length > 0
-                  ? Math.min(...memberBounds.map((bounds) => bounds.left)) - GROUP_PADDING_X
+                  ? Math.min(...memberBounds.map((bounds) => bounds.left)) -
+                    GROUP_PADDING_X
                   : fallbackPosition(index).x - 24,
               y:
                 memberBounds.length > 0
-                  ? Math.min(...memberBounds.map((bounds) => bounds.top)) - GROUP_PADDING_Y_TOP
+                  ? Math.min(...memberBounds.map((bounds) => bounds.top)) -
+                    GROUP_PADDING_Y_TOP
                   : fallbackPosition(index).y - 24,
             };
     const width =
@@ -743,7 +751,12 @@ const relationshipToEdge = (
     strokeWidth: 1.5,
   },
   deletable: true,
-  data: { relationship, showValidation, validationRefreshKey, onDetailsRequest },
+  data: {
+    relationship,
+    showValidation,
+    validationRefreshKey,
+    onDetailsRequest,
+  },
 });
 
 const nodesToTables = (nodes: SchemaNode[]): TableSpec[] => {
@@ -800,7 +813,9 @@ const nodesToGroups = (
       y: Number(node.position.y.toFixed(2)),
     },
     width: Number(node.style?.width ?? node.data.width ?? DEFAULT_GROUP_WIDTH),
-    height: Number(node.style?.height ?? node.data.height ?? DEFAULT_GROUP_HEIGHT),
+    height: Number(
+      node.style?.height ?? node.data.height ?? DEFAULT_GROUP_HEIGHT,
+    ),
     ...(node.data.metadata ? { metadata: node.data.metadata } : {}),
   }));
 };
@@ -822,7 +837,9 @@ const getNodeAbsolutePosition = (
 const edgesToRelationships = (edges: RelationshipEdge[]): RelationshipSpec[] =>
   edges
     .map((edge) => edge.data?.relationship)
-    .filter((relationship): relationship is RelationshipSpec => Boolean(relationship));
+    .filter((relationship): relationship is RelationshipSpec =>
+      Boolean(relationship),
+    );
 
 const attachDetailsHandler = (
   edge: RelationshipEdge,
@@ -1352,14 +1369,14 @@ const DatabaseSchemaNode = memo(
     };
     const showAddPlaceholderRow = data.editable;
     const lastColumn = data.columns[data.columns.length - 1];
-    const footerSurfaceStyle = lastColumn
-      && !showAddPlaceholderRow
-      ? getRowStatusStyles(
-          data.showValidation ? lastColumn.validation?.status : undefined,
-          data.selectedColumnId === lastColumn.id,
-          true,
-        )
-      : undefined;
+    const footerSurfaceStyle =
+      lastColumn && !showAddPlaceholderRow
+        ? getRowStatusStyles(
+            data.showValidation ? lastColumn.validation?.status : undefined,
+            data.selectedColumnId === lastColumn.id,
+            true,
+          )
+        : undefined;
     const displayStatus = data.showValidation ? data.resolvedStatus : "initial";
     const tableStatusStyles = getTableStatusStyles(displayStatus, selected);
 
@@ -1404,33 +1421,36 @@ const DatabaseSchemaNode = memo(
       [data],
     );
 
-    const commitEditing = useCallback((nextValue?: string) => {
-      if (!editingCell) {
-        return;
-      }
+    const commitEditing = useCallback(
+      (nextValue?: string) => {
+        if (!editingCell) {
+          return;
+        }
 
-      const currentColumn = data.columns.find(
-        (column) => column.id === editingCell.columnId,
-      );
-      if (!currentColumn) {
+        const currentColumn = data.columns.find(
+          (column) => column.id === editingCell.columnId,
+        );
+        if (!currentColumn) {
+          stopEditing();
+          return;
+        }
+
+        const normalized = normalizeEditableValue(nextValue ?? draftValue);
+        if (!normalized) {
+          stopEditing();
+          return;
+        }
+
+        if (normalized !== currentColumn[editingCell.field]) {
+          data.onColumnUpdate?.(data.id, editingCell.columnId, {
+            [editingCell.field]: normalized,
+          } as Pick<ColumnSpec, "name" | "data_type">);
+        }
+
         stopEditing();
-        return;
-      }
-
-      const normalized = normalizeEditableValue(nextValue ?? draftValue);
-      if (!normalized) {
-        stopEditing();
-        return;
-      }
-
-      if (normalized !== currentColumn[editingCell.field]) {
-        data.onColumnUpdate?.(data.id, editingCell.columnId, {
-          [editingCell.field]: normalized,
-        } as Pick<ColumnSpec, "name" | "data_type">);
-      }
-
-      stopEditing();
-    }, [data, draftValue, editingCell, stopEditing]);
+      },
+      [data, draftValue, editingCell, stopEditing],
+    );
 
     const renderColumnField = useCallback(
       (column: ColumnSpec, field: EditableColumnField) => {
@@ -1536,7 +1556,8 @@ const DatabaseSchemaNode = memo(
         style={{
           ...tableStatusStyles,
           backgroundColor:
-            footerSurfaceStyle?.backgroundColor ?? tableStatusStyles.backgroundColor,
+            footerSurfaceStyle?.backgroundColor ??
+            tableStatusStyles.backgroundColor,
         }}
       >
         <DatabaseSchemaNodeHeader
@@ -1616,7 +1637,9 @@ const DatabaseSchemaNode = memo(
                 key={column.id}
                 className="column-row group nodrag nopan cursor-pointer transition-colors"
                 data-selected={isSelectedColumn}
-                title={data.showValidation ? column.validation?.summary : undefined}
+                title={
+                  data.showValidation ? column.validation?.summary : undefined
+                }
                 style={{
                   borderBottom:
                     index < data.columns.length - 1
@@ -1697,7 +1720,12 @@ const DatabaseSchemaNode = memo(
                         type="source"
                       />
                     ) : (
-                      <div className={cn("min-w-0 flex-1", data.editable && "pl-7")}>
+                      <div
+                        className={cn(
+                          "min-w-0 flex-1",
+                          data.editable && "pl-7",
+                        )}
+                      >
                         {renderColumnField(column, "data_type")}
                       </div>
                     )}
@@ -1764,14 +1792,17 @@ const LabeledGroupNode = memo(
 LabeledGroupNode.displayName = "LabeledGroupNode";
 
 const RelationshipButtonEdge = memo(
-  ({ data, selected, ...edgeProps }: EdgeProps<RelationshipEdge>): JSX.Element => {
+  ({
+    data,
+    selected,
+    ...edgeProps
+  }: EdgeProps<RelationshipEdge>): JSX.Element => {
     const relationship = data?.relationship;
     if (!relationship) {
       return <ButtonEdge {...edgeProps}>{null}</ButtonEdge>;
     }
 
-    const edgeSummary =
-      relationship.label?.trim() || "i";
+    const edgeSummary = relationship.label?.trim() || "i";
     const buttonLabel =
       edgeSummary.length <= 2 ? edgeSummary : edgeSummary.slice(0, 2);
 
@@ -1779,7 +1810,10 @@ const RelationshipButtonEdge = memo(
       <ButtonEdge {...edgeProps}>
         <Button
           aria-label={`Inspect relationship from ${relationship.source_table}.${relationship.source_column} to ${relationship.target_table}.${relationship.target_column}`}
-          className={cn("rounded-full shadow-sm", selected && "ring-2 ring-ring/50")}
+          className={cn(
+            "rounded-full shadow-sm",
+            selected && "ring-2 ring-ring/50",
+          )}
           size="icon-xs"
           style={getRelationshipButtonStyles(
             relationship,
@@ -1882,7 +1916,9 @@ const SchemaEditorCanvas = ({
         selected_relationship_id: null,
       };
 
-      setNodes((currentNodes) => applySelectionToNodes(currentNodes, nextSelection));
+      setNodes((currentNodes) =>
+        applySelectionToNodes(currentNodes, nextSelection),
+      );
       setEdges((currentEdges) =>
         currentEdges.map((edge) =>
           edge.selected ? { ...edge, selected: false } : edge,
@@ -2000,9 +2036,8 @@ const SchemaEditorCanvas = ({
           (relationship): relationship is RelationshipSpec =>
             relationship !== undefined,
         )
-        .filter(
-          (relationship) =>
-            isRelationshipAttachedToColumn(relationship, tableId, columnId),
+        .filter((relationship) =>
+          isRelationshipAttachedToColumn(relationship, tableId, columnId),
         )
         .map((relationship) => relationship.id);
       const nextEdges = edgesRef.current.filter(
@@ -2021,7 +2056,9 @@ const SchemaEditorCanvas = ({
             : previousSelection.selected_column_id,
         selected_relationship_id:
           previousSelection.selected_relationship_id &&
-          deletedRelationshipIds.includes(previousSelection.selected_relationship_id)
+          deletedRelationshipIds.includes(
+            previousSelection.selected_relationship_id,
+          )
             ? null
             : previousSelection.selected_relationship_id,
       };
@@ -2056,41 +2093,47 @@ const SchemaEditorCanvas = ({
         groupOrder,
         tableLayoutWithinGroup,
       ),
-    [data.tables, editable, groupLayout, groupOrder, groups, tableLayoutWithinGroup],
+    [
+      data.tables,
+      editable,
+      groupLayout,
+      groupOrder,
+      groups,
+      tableLayoutWithinGroup,
+    ],
   );
 
   const incomingNodes = useMemo(
-    () =>
-      [
-        ...(showGroups
-          ? groups
-              .map((group) => resolvedLayouts.groupLayouts.get(group.id))
-              .filter((group): group is ResolvedGroupLayout => Boolean(group))
-              .map((group) => groupToNode(group, draggable, groupLayout))
-          : []),
-        ...data.tables.map((table, index) =>
-          tableToNode(
-            table,
-            index,
-            resolvedLayouts.groupLayouts,
-            resolvedLayouts.tablePositions,
-            showGroups,
-            tableLayoutWithinGroup,
-            null,
-            editable,
-            draggable,
-            connectable,
-            showValidation,
-            showColumnCountBadge,
-            columnTypeOptions,
-            validationRefreshKey,
-            handleColumnSelect,
-            handleColumnCreate,
-            handleColumnUpdate,
-            handleColumnDelete,
-          ),
+    () => [
+      ...(showGroups
+        ? groups
+            .map((group) => resolvedLayouts.groupLayouts.get(group.id))
+            .filter((group): group is ResolvedGroupLayout => Boolean(group))
+            .map((group) => groupToNode(group, draggable, groupLayout))
+        : []),
+      ...data.tables.map((table, index) =>
+        tableToNode(
+          table,
+          index,
+          resolvedLayouts.groupLayouts,
+          resolvedLayouts.tablePositions,
+          showGroups,
+          tableLayoutWithinGroup,
+          null,
+          editable,
+          draggable,
+          connectable,
+          showValidation,
+          showColumnCountBadge,
+          columnTypeOptions,
+          validationRefreshKey,
+          handleColumnSelect,
+          handleColumnCreate,
+          handleColumnUpdate,
+          handleColumnDelete,
         ),
-      ],
+      ),
+    ],
     [
       connectable,
       columnTypeOptions,
@@ -2133,7 +2176,8 @@ const SchemaEditorCanvas = ({
     ],
   );
 
-  const [nodes, setNodes, onNodesChange] = useNodesState<SchemaNode>(incomingNodes);
+  const [nodes, setNodes, onNodesChange] =
+    useNodesState<SchemaNode>(incomingNodes);
   const [edges, setEdges, onEdgesChange] =
     useEdgesState<RelationshipEdge>(incomingEdges);
 
@@ -2155,7 +2199,11 @@ const SchemaEditorCanvas = ({
         LIGHT_BACKGROUND_FALLBACK;
       const rgb = parseRgb(background);
       if (!rgb) {
-        setResolvedTheme(window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        setResolvedTheme(
+          window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light",
+        );
         return;
       }
 
@@ -2218,8 +2266,10 @@ const SchemaEditorCanvas = ({
   const publishSelection = useCallback(
     (selection: SelectionState) => {
       if (
-        selectionRef.current.selected_table_id === selection.selected_table_id &&
-        selectionRef.current.selected_column_id === selection.selected_column_id &&
+        selectionRef.current.selected_table_id ===
+          selection.selected_table_id &&
+        selectionRef.current.selected_column_id ===
+          selection.selected_column_id &&
         selectionRef.current.selected_relationship_id ===
           selection.selected_relationship_id
       ) {
@@ -2292,7 +2342,10 @@ const SchemaEditorCanvas = ({
   );
 
   useEffect(() => {
-    const nextNodes = applySelectionToNodes(incomingNodes, selectionRef.current);
+    const nextNodes = applySelectionToNodes(
+      incomingNodes,
+      selectionRef.current,
+    );
 
     startTransition(() => {
       setNodes((currentNodes) =>
@@ -2313,10 +2366,17 @@ const SchemaEditorCanvas = ({
         areEdgesEquivalent(currentEdges, nextEdges) ? currentEdges : nextEdges,
       );
     });
-  }, [handleRelationshipDetailsRequest, incomingEdges, setEdges, showEdgeButton]);
+  }, [
+    handleRelationshipDetailsRequest,
+    incomingEdges,
+    setEdges,
+    showEdgeButton,
+  ]);
 
   useEffect(() => {
-    setNodes((currentNodes) => applySelectionToNodes(currentNodes, selectionState));
+    setNodes((currentNodes) =>
+      applySelectionToNodes(currentNodes, selectionState),
+    );
     setEdges((currentEdges) =>
       applySelectionToEdges(
         currentEdges,
@@ -2324,7 +2384,13 @@ const SchemaEditorCanvas = ({
         showEdgeButton ? handleRelationshipDetailsRequest : undefined,
       ),
     );
-  }, [handleRelationshipDetailsRequest, selectionState, setEdges, setNodes, showEdgeButton]);
+  }, [
+    handleRelationshipDetailsRequest,
+    selectionState,
+    setEdges,
+    setNodes,
+    showEdgeButton,
+  ]);
 
   const onConnect = useCallback(
     (connection: Connection) => {
@@ -2430,7 +2496,9 @@ const SchemaEditorCanvas = ({
   const onEdgesDelete = useCallback(
     (deletedEdges: Edge[]) => {
       const deletedIds = new Set(deletedEdges.map((edge) => edge.id));
-      const nextEdges = edgesRef.current.filter((edge) => !deletedIds.has(edge.id));
+      const nextEdges = edgesRef.current.filter(
+        (edge) => !deletedIds.has(edge.id),
+      );
       setEdges(nextEdges);
       publishRelationships(nextEdges, "relationship_deleted", {
         relationship_ids: deletedEdges.map((edge) => edge.id),
@@ -2450,7 +2518,9 @@ const SchemaEditorCanvas = ({
         .filter((node) => node.type === "databaseSchema")
         .map((node) => node.id);
       const deletedNodeIds = new Set(deletedTableIds);
-      const nextNodes = nodesRef.current.filter((node) => !deletedNodeIds.has(node.id));
+      const nextNodes = nodesRef.current.filter(
+        (node) => !deletedNodeIds.has(node.id),
+      );
       const nextEdges = edgesRef.current.filter(
         (edge) =>
           !deletedNodeIds.has(edge.source) && !deletedNodeIds.has(edge.target),
@@ -2468,11 +2538,24 @@ const SchemaEditorCanvas = ({
         table_ids: deletedTableIds,
       });
     },
-    [emitEvent, publishNodeState, setEdges, setNodes, setStateValue, updateSelectionState],
+    [
+      emitEvent,
+      publishNodeState,
+      setEdges,
+      setNodes,
+      setStateValue,
+      updateSelectionState,
+    ],
   );
 
   const onSelectionChange = useCallback(
-    ({ nodes: selectedNodes, edges: selectedEdges }: { nodes: Node[]; edges: Edge[] }) =>
+    ({
+      nodes: selectedNodes,
+      edges: selectedEdges,
+    }: {
+      nodes: Node[];
+      edges: Edge[];
+    }) =>
       publishSelection(
         buildSelection(selectedNodes, selectedEdges, selectionRef.current),
       ),
@@ -2481,7 +2564,10 @@ const SchemaEditorCanvas = ({
 
   const onNodeDragStop = useCallback(
     (_event: unknown, movedNode: Node) => {
-      const absolutePosition = getNodeAbsolutePosition(movedNode, nodesRef.current);
+      const absolutePosition = getNodeAbsolutePosition(
+        movedNode,
+        nodesRef.current,
+      );
       publishTables(nodesRef.current, "node_moved", {
         ...(movedNode.type === "labeledGroup"
           ? { group_id: movedNode.id, node_type: "group" }

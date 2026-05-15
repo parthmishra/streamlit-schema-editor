@@ -1,10 +1,6 @@
 import React, { type ComponentProps, type ReactNode } from "react";
 
-import {
-  BaseNode,
-  BaseNodeContent,
-  BaseNodeHeader,
-} from "./base-node";
+import { BaseNode, BaseNodeContent, BaseNodeHeader } from "./base-node";
 import { TableBody, TableCell, TableRow } from "./ui/table";
 import { cn } from "../lib/utils";
 

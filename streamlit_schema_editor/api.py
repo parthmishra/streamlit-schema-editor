@@ -26,7 +26,14 @@ def _coerce_result(result: Any) -> dict[str, Any]:
         return {}
 
     coerced: dict[str, Any] = {}
-    for key in ("groups", "tables", "relationships", "selection", "event", "event_context"):
+    for key in (
+        "groups",
+        "tables",
+        "relationships",
+        "selection",
+        "event",
+        "event_context",
+    ):
         if hasattr(result, key):
             coerced[key] = getattr(result, key)
 
