@@ -1,6 +1,6 @@
 [project]
 name = "streamlit-schema-editor"
-version = "0.0.1"
+version = "0.1.0"
 description = "Streamlit custom component for rendering and editing schema graphs"
 readme = "README.md"
 license = "MIT"
@@ -9,15 +9,6 @@ requires-python = ">=3.11"
 authors = [{ name = "Parth Mishra", email = "pmishraworld@mac.com" }]
 dependencies = ["streamlit >= 1.51"]
 keywords = ["streamlit", "schema", "er-diagram", "lineage", "metadata"]
-classifiers = [
-  "Development Status :: 3 - Alpha",
-  "Framework :: Streamlit",
-  "Intended Audience :: Developers",
-  "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Topic :: Software Development :: User Interfaces",
-]
 
 [project.urls]
 Homepage = "https://github.com/parthmishra/streamlit-schema-editor"
